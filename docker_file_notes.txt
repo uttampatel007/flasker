@@ -1,0 +1,135 @@
+Writing Dockerfile
+
+	# syntax=docker/dockerfile:1      //parser directive. should always be first/on-top in dockerfile.
+
+	FROM python:3.8-slim-buster       //base image
+
+	WORKDIR /app                      //default location for all subsequent commands
+
+	COPY requirements.txt requirements.txt   //(^what file to copy) (^where to copy relative to app directory)
+
+	RUN pip3 install -r requirements.txt     //to install requirements files
+
+	COPY . .                           //to copy source code This COPY command takes all the files located in the current 									   directory and copies them into the image.
+
+	CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]    //to run server and specify the host
+
+
+--Complete Docker File--
+
+
+# syntax=docker/dockerfile:1
+FROM python:3.8-slim-buster
+WORKDIR /app
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+COPY . .
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+
+
+--End Docker File--
+
+Commands*
+
+$docker build --tag python-docker .      //to build docker image.Don't miss dot at the end.Use sudo if required
+$docker images                              //to list all images in docker
+
+	REPOSITORY      TAG               IMAGE ID       CREATED         SIZE
+	python-docker   latest            8cae92a8fbd6   3 minutes ago   123MB
+	python          3.8-slim-buster   be5d294735c6   9 days ago      113MB
+
+
+$docker tag python-docker:latest python-docker:v1.0.0  //to create multipe tags for any given image
+
+$docker images
+	REPOSITORY      TAG               IMAGE ID       CREATED         SIZE
+	python-docker   latest            8cae92a8fbd6   4 minutes ago   123MB
+	python-docker   v1.0.0            8cae92a8fbd6   4 minutes ago   123MB <-- new tag created
+	python          3.8-slim-buster   be5d294735c6   9 days ago      113MB
+
+	//note image with different tag has the same id
+
+$docker rmi python-docker:v1.0.0     //command to remove tag [image with latest tag will be there]
+
+$docker run python-docker            //our program will run bot localhost:5000 will not be accessible
+									 //because our container is run in isolation which includes networking.
+									 //we need to use publish command to open port
+									 // --publish [-p for short]
+									 //format is --publish [host port]:[container port]
+
+
+$docker run --publish 5000:5000 python-docker 
+or
+$docker run -p 8000:5000 python-docker
+
+$docker run -d -p 5000:5000 python-docker  //to run docker container in detached mode [--detach can also be used]
+
+$docker ps 							  //to list containers running on machine
+	CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS          PORTS                    NAMES
+	239b590ccff1   flask-blog-docker   "python3 -m flask ru…"   11 minutes ago   Up 11 minutes   0.0.0.0:5000->5000/tcp   distracted_tharp
+
+
+
+$docker ps --all                      //to show/list all containers
+
+$docker stop [CONTAINER ID]  		  //to stop running container
+
+or 
+
+$docker stop [NAME]
+
+$docker rm [name]                     //to remove container
+
+$docker rm [name] [name] [name]       //to remove multiple containers
+
+
+$docker run -d -p 5000:5000 --name rest-server python-docker  //to give custom name to container
+
+
+--->> Starting of Intresting Part : Get Ready to Get Errors <<---
+
+
+$docker volume create mongo           //command to create volume
+										Volumes: Used for Decoupling Container with Storage
+												 Volume[Storage/Data] can be share amoung different containers
+										 		 We can delete container but preserve our volume[Data/Storage]
+										 
+$docker network create mongonet       //network to connect with our web application with volume [mongo]
+
+
+docker-compose.dev.yml
+'''
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+    ports:
+    - 5000:5000
+    volumes:
+    - ./:/app
+
+  mongodb:
+    image: mongo
+    ports:
+    - 27018:27017
+    volumes:
+      - mongo:/data/db
+
+volumes:
+  mongo:
+
+'''
+NOTES ON COMPOSE FILE
+- Used port 27018 [already mongo is running locally on 27017 so need to give other port to this app]
+- Also changed app.config["MONGO_URI"] 
+	from:
+		"mongodb://localhost:27017/myBlogDatabase"
+	To:
+		"mongodb://mongodb/myBlogDatabase"
+
+
+
+$docker-compose -f docker-compose.dev.yml up --build
+
