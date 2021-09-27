@@ -135,3 +135,9 @@ NOTES ON COMPOSE FILE
 
 $docker-compose -f docker-compose.dev.yml up --build
 
+
+docker rm -vf $(docker ps -a -q)$   // delete all docker containers 
+
+
+
+
