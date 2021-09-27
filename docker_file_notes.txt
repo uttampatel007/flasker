@@ -51,6 +51,8 @@ $docker images
 
 $docker rmi python-docker:v1.0.0     //command to remove tag [image with latest tag will be there]
 
+$docker rmi -f $(docker images -a -q)  // command to delete all docker images
+
 $docker run python-docker            //our program will run bot localhost:5000 will not be accessible
 									 //because our container is run in isolation which includes networking.
 									 //we need to use publish command to open port
