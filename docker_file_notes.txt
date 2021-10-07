@@ -138,6 +138,14 @@ $docker-compose -f docker-compose.dev.yml up --build
 
 $docker rm -vf $(docker ps -a -q)   // delete all docker containers 
 
+If you want to run your services in the background, you can pass the -d flag (for “detached” mode) to docker-compose up and use docker-compose ps to see what is currently running:
+
+ docker-compose up -d
+ docker-compose ps
+
+More basics
+https://docs.docker.com/compose/gettingstarted/#step-5-edit-the-compose-file-to-add-a-bind-mount
+
 
 
 
