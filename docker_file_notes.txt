@@ -66,19 +66,24 @@ $docker run -p 8000:5000 python-docker
 
 $docker run -d -p 5000:5000 python-docker  //to run docker container in detached mode [--detach can also be used]
 
-$docker ps 							  //to list containers running on machine
+$docker ps 							  //to list containers running on machine [only running]
 	CONTAINER ID   IMAGE               COMMAND                  CREATED          STATUS          PORTS                    NAMES
 	239b590ccff1   flask-blog-docker   "python3 -m flask ru…"   11 minutes ago   Up 11 minutes   0.0.0.0:5000->5000/tcp   distracted_tharp
 
 
 
-$docker ps --all                      //to show/list all containers
+$docker ps --all                      //to show/list all containers [stopped and running all]
+or
+$docker ps -a
+
 
 $docker stop [CONTAINER ID]  		  //to stop running container
 
 or 
 
 $docker stop [NAME]
+
+$docker start [CONTAINER ID] or [NAME]  // to start stopped container
 
 $docker rm [name]                     //to remove container
 
