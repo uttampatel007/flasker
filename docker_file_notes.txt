@@ -140,6 +140,7 @@ NOTES ON COMPOSE FILE
 
 $docker-compose -f docker-compose.dev.yml up --build
 
+$docker-compose -f docker-compose.dev.yml down
 
 $docker rm -vf $(docker ps -a -q)   // delete all docker containers 
 
@@ -150,6 +151,21 @@ If you want to run your services in the background, you can pass the -d flag (fo
 
 More basics
 https://docs.docker.com/compose/gettingstarted/#step-5-edit-the-compose-file-to-add-a-bind-mount
+
+
+Docker Debugging:
+
+$ docker logs <container-name/id> | tail
+
+$ docker logs <container-name/id> -f                                  // to follow logs
+
+Docker Network:
+- Containers in same network can communicate easily using conatiner name
+
+
+$ docker network ls                  // to list out all network
+
+$ docker network create <custom-name>     // ro create new network
 
 
 
