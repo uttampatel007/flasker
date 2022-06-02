@@ -162,11 +162,15 @@ $ docker logs <container-name/id> -f                                  // to foll
 Docker Network:
 - Containers in same network can communicate easily using conatiner name
 
-
 $ docker network ls                  // to list out all network
 
 $ docker network create <custom-name>     // ro create new network
 
 
-
+# There are 4 ways to manage Docker environment variables 
+1) Adding then using -e while running
+2) Adding then in compose file under environment tag
+3) Adding env_file tag in compose file 
+4) Adding env_file while running docker compose
+--> https://towardsdatascience.com/a-complete-guide-to-using-environment-variables-and-files-with-docker-and-compose-4549c21dc6af
 
