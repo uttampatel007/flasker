@@ -174,3 +174,6 @@ $ docker network create <custom-name>     // ro create new network
 4) Adding env_file while running docker compose
 --> https://towardsdatascience.com/a-complete-guide-to-using-environment-variables-and-files-with-docker-and-compose-4549c21dc6af
 
+# Running commands while container is running
+docker-compose run <image-name> <command>
+docker-compose run web python3 manage.py createsuperuser
